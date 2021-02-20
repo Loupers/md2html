@@ -1,78 +1,76 @@
 from structures import Element
-# 0-blank line, 1-h1, 2-h2, 4 - br, 5 - blockquotes, 6 - ordered list, 7 - unordered list, 8 - image, 9-hline, 10 - escape char
-def parseLine(line):
-    if len(line) == 0:
-        return 0
+from readerUtils import *
+import random
+import string
 
-    if line[0] == '=' or line[0] == '-':
-        isWhole = isWholeLine(line, line[0])
-        if isWhole and line[0] == '-':
-            return 2
-        elif isWhole and line[0] == '=':
-            return 1
-    
-    if line[-1] == ' ' and line[-2] == ' ':
-        #TODO e = solveInsideLine(line)
-        #TODO e.append(Element('br', []))
+class MDReader:
 
-    if line[0] == '>':
-        return 5
+    def __init__(self, file):
+        self.file = file
+        self.elements = []
+        self.currentLine = ""
 
-    if line[0] == '1.':
-        return 6
+    def readWholeFile(self):
+        while True:
+            line = self.file.readline()
 
-    if line[0] == '-' or line[0] == '*':
-        x = countSymbols(line, line[0])
-        if x == 1:
-            return 7
-        if x >= 3:
-            return 9
+            if not line:
+                break
+            self.currentLine = line
+            self.solveLine(getTypeOfLine(line), line)
 
-    if line[0] == '+':
-        return 7
+    def setLastToParagraph(self):
+        content = []
+        i = -1
+        for i in range(len(self.elements) - 1, -1, -1):
+            if self.elements[i].tag == 'p':
+                break
+            content.append(self.elements.pop(i))
+        self.elements.append(Element('p', content))      
 
-    if line[0] == '!':
-        return 8
-    
-    if line[0] == '\\':
-        return 10
-    
+    def solveLine(self, number, line):
+        if number == 0:
+            self.setLastToParagraph()
+        elif number == 1:
+            self.setLastToHeader(1)
+        elif number == 2:
+            self.setLastToHeader(2)
+        elif number == 5:
+            self.elements.append(Element("blockquote", self.solveBlockAsFile(self.readSymbolBlock(['>']))))
+        elif number == 7:
+            self.elements.append((Element("ul", solveUl(self.readSymbolBlock(['+', '-', '*'])))))
+        elif number == 9:
+            self.elements.append((Element("hline", [])))
+        elif number == -1:
+            self.elements.append((Element("string", line)))
 
-
-def getTypeOfHeader(line):
-    headerCounter = 0
-    for i in line:
-        if i == '#':
-            headerCounter += 1
+    def setLastToHeader(self, typ):
+        x = self.elements.pop(-1)
+        e = Element("", [])
+        e.content = x
+        if typ == 1:
+            e.tag = "h1"
+        elif typ == 2:
+            e.tag = "h2"
         else:
-            break
-    tag = "error"
-    if headerCounter == 1:
-        tag = "h1"
-    elif headerCounter == 2:
-        tag = "h2"
-    elif headerCounter == 3:
-        tag = "h3"
-    elif headerCounter == 4:
-        tag = "h4"
-    elif headerCounter == 5:
-        tag = "h5"
-    elif headerCounter >= 6:
-        tag = "h6"
-    content = line[headerCounter:]
-    return Element(tag, parseLine(content))
+            print("error in setting last header")
+            exit()
+        self.elements.append(e)
 
-def isWholeLine(line, symbol):
-    for i in line:
-        if i != symbol:
-            return False
-    return True
+    def readSymbolBlock(self, symbol):
+        block = [self.currentLine[1:]]
+        self.currentLine = self.file.readline()
+        while self.currentLine and self.currentLine[0] in symbol:
+            block.append(self.currentLine[1:])
+            self.currentLine = self.file.readline()
+        return block
 
-def countSymbols(line, symbol):
-    count = 0
-    for i in line:
-        if i == symbol:
-            count+=1
-        else:
-            break
-    return count
+    def solveBlockAsFile(self, block):
+        newFileName = "/tmp/" + ''.join(random.choices(string.ascii_lowercase + string.digits, k=32))
+        f = open(newFileName, 'w+')
+        for i in block:
+            f.write(i[1:])
+        f.close()
+        r = MDReader(open(newFileName, 'r'))
+        r.readWholeFile()
+        return r.elements
