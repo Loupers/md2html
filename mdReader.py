@@ -40,6 +40,8 @@ class MDReader:
             self.elements.append((Element("ol", solveList(self.readOrderedList()))))
         elif number == 7:
             self.elements.append((Element("ul", solveList(self.readSymbolBlock(['+', '-', '*'])))))
+        elif number == 8:
+            self.elements.append(getTypeOfHeader(line))
         elif number == 9:
             self.elements.append((Element("hr", [])))
         elif number == -1:

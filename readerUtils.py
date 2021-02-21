@@ -42,7 +42,7 @@ def getTypeOfHeader(line):
     content = line[headerCounter:]
     return Element(tag, solveInsideLine(content))
 
-# 0-blank line, 1-h1, 2-h2, 4 - br, 5 - blockquotes, 6 - ordered list, 7 - unordered list, 8 - image, 9-hline, 10 - table
+# 0-blank line, 1-h1, 2-h2, 4 - br, 5 - blockquotes, 6 - ordered list, 7 - unordered list, 8 - line with header, 9-hline, 10 - table
 def getTypeOfLine(line):
     if line == '\n':
         return 0
@@ -71,7 +71,7 @@ def getTypeOfLine(line):
     if line[0] == '+':
         return 7
 
-    if line[0] == '!':
+    if line[0] == '#':
         return 8
         
     if line[0] == '|':
