@@ -4,7 +4,7 @@ def isWholeLine(line, symbol):
     for i in line:
         if i == '\n':
             break
-        
+
         if i != symbol:
             return False
     return True
@@ -39,7 +39,7 @@ def getTypeOfHeader(line):
     elif headerCounter >= 6:
         tag = "h6"
     content = line[headerCounter:]
-    return Element(tag, parseLine(content))
+    return Element(tag, solveInsideLine(content))
 
 # 0-blank line, 1-h1, 2-h2, 4 - br, 5 - blockquotes, 6 - ordered list, 7 - unordered list, 8 - image, 9-hline, 10 - table
 def getTypeOfLine(line):
@@ -82,9 +82,9 @@ def getTypeOfLine(line):
 def solveUl(block):
     el = []
     for i in block:
-        el.append(Element("li", solveInside(i)))
+        el.append(Element("li", solveInsideLine(i)))
     return el
 
 
-def solveInside(i):
-    return i
+def solveInsideLine(line):
+    return line

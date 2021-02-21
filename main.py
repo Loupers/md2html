@@ -1,11 +1,8 @@
 from structures import Element
 from sys import argv
 from mdReader import MDReader
+from htmlprinter import HTMLPrinter
 
-elements = []
-
-def readMD(file):
-    pass
 
 def checkNotFile(name):
     try:
@@ -24,8 +21,9 @@ def main():
     f = open(nameOfFile, 'r')
     r = MDReader(f)
     r.readWholeFile()
-    print(r.elements)
     f.close()
+    printer = HTMLPrinter(r.elements)
+    printer.printToFile('test.html')
 
 if __name__ == "__main__":
     main()

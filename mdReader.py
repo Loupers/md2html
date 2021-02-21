@@ -42,7 +42,7 @@ class MDReader:
         elif number == 9:
             self.elements.append((Element("hline", [])))
         elif number == -1:
-            self.elements.append((Element("string", line)))
+            self.elements.append(Element("string", line))
 
     def setLastToHeader(self, typ):
         x = self.elements.pop(-1)
@@ -60,7 +60,7 @@ class MDReader:
     def readSymbolBlock(self, symbol):
         block = [self.currentLine[1:]]
         self.currentLine = self.file.readline()
-        while self.currentLine and self.currentLine[0] in symbol:
+        while self.currentLine and (self.currentLine[0] in symbol):
             block.append(self.currentLine[1:])
             self.currentLine = self.file.readline()
         return block
