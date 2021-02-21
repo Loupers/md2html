@@ -21,12 +21,11 @@ class MDReader:
 
     def setLastToParagraph(self):
         content = []
-        i = -1
         for i in range(len(self.elements) - 1, -1, -1):
             if self.elements[i].tag == 'p':
                 break
             content.append(self.elements.pop(i))
-        self.elements.append(Element('p', content))      
+        self.elements.append(Element('p', reversed(content)))      
 
     def solveLine(self, number, line):
         if number == 0:
@@ -37,10 +36,12 @@ class MDReader:
             self.setLastToHeader(2)
         elif number == 5:
             self.elements.append(Element("blockquote", self.solveBlockAsFile(self.readSymbolBlock(['>']))))
+        elif number == 6:
+            self.elements.append((Element("ol", solveList(self.readOrderedList()))))
         elif number == 7:
-            self.elements.append((Element("ul", solveUl(self.readSymbolBlock(['+', '-', '*'])))))
+            self.elements.append((Element("ul", solveList(self.readSymbolBlock(['+', '-', '*'])))))
         elif number == 9:
-            self.elements.append((Element("hline", [])))
+            self.elements.append((Element("hr", [])))
         elif number == -1:
             self.elements.append(Element("string", line))
 
@@ -74,3 +75,11 @@ class MDReader:
         r = MDReader(open(newFileName, 'r'))
         r.readWholeFile()
         return r.elements
+
+    def readOrderedList(self):
+        block = [''.join(self.currentLine.split('.')[1:])]
+        self.currentLine = self.file.readline()
+        while checkForOl(self.currentLine):
+            block.append(''.join(self.currentLine.split('.')[1:]))
+            self.currentLine = self.file.readline()
+        return block

@@ -1,4 +1,5 @@
 from structures import Element
+import re
 
 def isWholeLine(line, symbol):
     for i in line:
@@ -56,7 +57,7 @@ def getTypeOfLine(line):
     if line[0] == '>':
         return 5
 
-    if line[0] == '1.':
+    if checkForOl(line):
         return 6
 
     if line[0] == '-' or line[0] == '*':
@@ -78,8 +79,13 @@ def getTypeOfLine(line):
 
     return -1
 
+def checkForOl(line):
+    l = line.split('.')
+    if len(l[0]) > 0 and l[0].isdigit():
+        return True
+    return False
 
-def solveUl(block):
+def solveList(block):
     el = []
     for i in block:
         el.append(Element("li", solveInsideLine(i)))
