@@ -8,17 +8,27 @@ test text
 * e
 
 > test 
-> - tohohle
-> - bloku
-> - neco
+> - ***tohohle*__
+> - *bloku*
+> - __neco__
 
 ***
 
 1. a
 3. c
 
+`some sort of code`
+`` double code `code` code ``
+
 ne
 -------------------
+
+Search engine [Duck Duck Go](https://duckduckgo.com "The best search engine for privacy")
+<https://google.com>
+
+![Cool](orel.png)
+
+\-
 
 1. a
 2. b

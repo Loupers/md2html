@@ -45,7 +45,7 @@ class MDReader:
         elif number == 9:
             self.elements.append((Element("hr", [])))
         elif number == -1:
-            self.elements.append(Element("string", line))
+            self.elements.append(Element('div', solveInsideLine(line)))
 
     def setLastToHeader(self, typ):
         x = self.elements.pop(-1)

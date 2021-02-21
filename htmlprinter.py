@@ -18,8 +18,10 @@ class HTMLPrinter:
                 if  element.tag == "string":
                     toWriteIn = toWriteIn + element.content
                 else:
-                    toWriteIn = toWriteIn + f"<{element.tag}>"
-                    toWriteIn = toWriteIn + HTMLPrinter(element.content).preparePrintToFile()
+                    toWriteIn = toWriteIn + f"<{element.tag} "
+                    for i in element.params:
+                        toWriteIn += f"{i}"
+                    toWriteIn = toWriteIn + '>' + HTMLPrinter(element.content).preparePrintToFile()
                     toWriteIn = toWriteIn + f"</{element.tag}>"
         return toWriteIn
 

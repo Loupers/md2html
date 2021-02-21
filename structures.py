@@ -5,6 +5,7 @@ class Element:
     #other elements inside of this element
     content = []
 
-    def __init__(self, tag, content):
+    def __init__(self, tag, content, params = []):
         self.tag = tag
         self.content = content
+        self.params = params
