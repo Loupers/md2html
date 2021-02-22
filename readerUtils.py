@@ -184,7 +184,10 @@ def solveForType(number, line, pos):
         end = pos + 1
         while end < len(line) and line[end] != '>':
             end += 1
-        a = Element('a', [Element('string', line[pos+1:end])], params=[f"href={line[pos+1:end]}"])
+        if '://' in line[pos+1:end]:
+            a = Element('a', [Element('string', line[pos+1:end])], params=[f"href={line[pos+1:end]}"])
+        else:
+            return -1, -1
         return a, end
     return -1, -1
 
