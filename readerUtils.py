@@ -218,3 +218,29 @@ def solveInsideLine(line, ignored = []):
     if len(line) > 1 and line[-1] == ' ' and line[-2] == ' ':
         content.append(Element('br', ""))
     return content
+
+def isTableHeader(line):
+    for i in line.split('|'):
+        if i != ''.join(['-'] * len(i)):
+            return False
+    return True
+
+def solveTableRow(row, tag="td"):
+    split = row.split('|')
+    del split[0]
+    del split[-1]
+    elements = []
+    for i in split:
+        elements.append(Element(tag, solveInsideLine(i)))
+    return elements
+
+def solveTable(table):
+    block = []
+    if len(table) > 1 and isTableHeader(table[1].strip()):
+        block.append(Element('tr', solveTableRow(table[0], tag="th")))
+    else:
+        block.append(Element('tr', solveTableRow(table[0], tag="td")))
+    for i in range(2,len(table)):
+        block.append(Element('tr', solveTableRow(table[i], tag='td')))
+    return block
+    

@@ -33,8 +33,13 @@ Search engine [Duck Duck Go](https://duckduckgo.com "The best search engine for 
 1. a
 2. b
 4. c
-14. d
+    14. d
 156. e
 6. d
 
 ###### xk h6
+
+|hlavicka|dva|
+|--------|---|
+|*nejaky*|bunky|
+|ktery|nejsou|super|

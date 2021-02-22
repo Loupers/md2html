@@ -21,7 +21,6 @@ class HTMLPrinter:
                 toWriteIn = toWriteIn + f"<{element.tag}"
                 for i in element.params:
                     toWriteIn += f" {i}"
-                #TODO for some reason for headers tags this shit doesnt work
                 toWriteIn = toWriteIn + '>' + HTMLPrinter(element.content).preparePrintToFile()
                 p = HTMLPrinter(element.content)
                 x = p.preparePrintToFile()

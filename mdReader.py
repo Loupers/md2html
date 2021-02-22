@@ -44,8 +44,11 @@ class MDReader:
             self.elements.append(getTypeOfHeader(line))
         elif number == 9:
             self.elements.append((Element("hr", [])))
+        elif number == 10:
+            self.elements.append(Element("table", solveTable(self.readTable())))
         elif number == -1:
             self.elements.append(Element('div', solveInsideLine(line)))
+
 
     def setLastToHeader(self, typ):
         x = self.elements.pop(-1)
@@ -83,5 +86,12 @@ class MDReader:
         self.currentLine = self.file.readline()
         while checkForOl(self.currentLine):
             block.append(''.join(self.currentLine.split('.')[1:]))
+            self.currentLine = self.file.readline()
+        return block
+
+    def readTable(self):
+        block = []
+        while self.currentLine and self.currentLine[0] == '|':
+            block.append(self.currentLine)
             self.currentLine = self.file.readline()
         return block
