@@ -8,21 +8,24 @@ class HTMLPrinter:
     def preparePrintToFile(self):
         toWriteIn = ""
         if type(self.elements) == type(Element("", [])):
-            if self.elements.tag == "string":
-                toWriteIn = toWriteIn + self.elements.content
-        else: 
-            for element in self.elements:
-                if type(element) == type(''):
-                    toWriteIn = toWriteIn + element
-                    continue
-                if  element.tag == "string":
-                    toWriteIn = toWriteIn + element.content
-                else:
-                    toWriteIn = toWriteIn + f"<{element.tag} "
-                    for i in element.params:
-                        toWriteIn += f"{i}"
-                    toWriteIn = toWriteIn + '>' + HTMLPrinter(element.content).preparePrintToFile()
-                    toWriteIn = toWriteIn + f"</{element.tag}>"
+            x = self.elements
+            self.elements = []
+            self.elements.append(x)
+        for element in self.elements:
+            if type(element) == type(''):
+                toWriteIn = toWriteIn + element
+                continue
+            if  element.tag == "string":
+                toWriteIn = toWriteIn + element.content
+            else:
+                toWriteIn = toWriteIn + f"<{element.tag}"
+                for i in element.params:
+                    toWriteIn += f" {i}"
+                #TODO for some reason for headers tags this shit doesnt work
+                toWriteIn = toWriteIn + '>' + HTMLPrinter(element.content).preparePrintToFile()
+                p = HTMLPrinter(element.content)
+                x = p.preparePrintToFile()
+                toWriteIn = toWriteIn + f"</{element.tag}>"
         return toWriteIn
 
     def printToFile(self, fileName):
