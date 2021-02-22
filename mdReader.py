@@ -67,7 +67,10 @@ class MDReader:
         block = [self.currentLine[1:]]
         self.currentLine = self.file.readline()
         while self.currentLine and (self.currentLine[0] in symbol):
-            block.append(self.currentLine[1:])
+            if type(symbol) == type(''):
+                block.append(self.currentLine[len(symbol):].lstrip())
+            else:
+                block.append(self.currentLine[1:])
             self.currentLine = self.file.readline()
         return block
 
@@ -84,7 +87,9 @@ class MDReader:
     def readOrderedList(self):
         block = [''.join(self.currentLine.split('.')[1:])]
         self.currentLine = self.file.readline()
-        while checkForOl(self.currentLine):
+        while checkForOl(self.currentLine.lstrip()):
+            if self.currentLine[0:4] == '    ':
+                block.append(Element('ol', solveList(x.lstrip().split('.')[1:] for x in self.readSymbolBlock('    '))))
             block.append(''.join(self.currentLine.split('.')[1:]))
             self.currentLine = self.file.readline()
         return block

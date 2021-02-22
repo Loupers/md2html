@@ -90,7 +90,10 @@ def checkForOl(line):
 def solveList(block):
     el = []
     for i in block:
-        el.append(Element("li", solveInsideLine(i)))
+        if type(i) == type(Element("", [])):
+            el.append(i)
+        else:
+            el.append(Element("li", solveInsideLine(i)))
     return el
 
 def getEmphasis(line, pos):
