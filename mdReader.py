@@ -64,11 +64,17 @@ class MDReader:
         self.elements.append(e)
 
     def readSymbolBlock(self, symbol):
-        block = [self.currentLine[1:]]
+        if type(symbol) == type(''):
+            block = [self.currentLine[len(symbol):]]
+        else:
+            block = [self.currentLine[1:]]
         self.currentLine = self.file.readline()
-        while self.currentLine and (self.currentLine[0] in symbol):
+        while self.currentLine and (self.currentLine[0] in symbol or re.search('^    *', self.currentLine)):
             if type(symbol) == type(''):
                 block.append(self.currentLine[len(symbol):].lstrip())
+            elif self.currentLine[0:4] == '    ':
+                block.extend(self.solveBlockAsFile(self.readSymbolBlock(f'    ')))
+                block.append(self.currentLine[1:])
             else:
                 block.append(self.currentLine[1:])
             self.currentLine = self.file.readline()
@@ -78,7 +84,10 @@ class MDReader:
         newFileName = "/tmp/" + ''.join(random.choices(string.ascii_lowercase + string.digits, k=32))
         f = open(newFileName, 'w+')
         for i in block:
-            f.write(i[1:])
+            if i[1] == '>':
+                f.write(i[1:])
+            else:
+                f.write(i)
         f.close()
         r = MDReader(open(newFileName, 'r'))
         r.readWholeFile()

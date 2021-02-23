@@ -92,6 +92,9 @@ def solveList(block):
     for i in block:
         if type(i) == type(Element("", [])):
             el.append(i)
+        elif type(i) == type([]):
+            for x in i:
+                el.append(Element('li', solveInsideLine(x)))
         else:
             el.append(Element("li", solveInsideLine(i)))
     return el
